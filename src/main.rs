@@ -1,5 +1,4 @@
 use axum::{extract::Json, http::StatusCode, routing::get};
-use std::net::SocketAddr;
 use utoipa::{OpenApi, ToSchema};
 use utoipa_axum::router::OpenApiRouter;
 
@@ -22,11 +21,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let router = router.route("/openapi.json", get(|| async { Json(api) }));
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8888));
+    let addr = std::net::SocketAddr::from(([0, 0, 0, 0], 8888));
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
 
-    Ok(axum::serve(listener, router).await?)
+    axum::serve(listener, router).await?;
+
+    Ok(())
 }
 
 #[utoipa::path(
