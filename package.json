@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "generate": "elm-open-api api.json --output-dir ./src/ --server http://localhost:8888"
+    "fetch-schema": "curl -s http://localhost:8888/openapi.json | jq > openapi.json",
+    "generate": "elm-open-api openapi.json --output-dir ./src/ --server http://localhost:8888"
   }
 }

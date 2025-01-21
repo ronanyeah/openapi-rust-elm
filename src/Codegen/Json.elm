@@ -28,20 +28,18 @@ decodeStatsData =
     Json.Decode.succeed
         (\data1 value1 -> { data1 = data1, value1 = value1 })
         |> OpenApi.Common.jsonDecodeAndMap
-            (OpenApi.Common.decodeOptionalField
+            (Json.Decode.field
                 "data1"
                 (Json.Decode.oneOf
                     [ Json.Decode.map
-                        Codegen.Types.Empty___Or_Data1__Empty__
-                        (Json.Decode.null ())
-                    , Json.Decode.map
-                        Codegen.Types.Empty___Or_Data1__Data1
+                        OpenApi.Common.Present
                         decodeData1
+                    , Json.Decode.null OpenApi.Common.Null
                     ]
                 )
             )
         |> OpenApi.Common.jsonDecodeAndMap
-            (OpenApi.Common.decodeOptionalField
+            (Json.Decode.field
                 "value1"
                 (Json.Decode.oneOf
                     [ Json.Decode.map
@@ -57,34 +55,23 @@ decodeStatsData =
 encodeStatsData : Codegen.Types.StatsData -> Json.Encode.Value
 encodeStatsData rec =
     Json.Encode.object
-        (List.filterMap
-            Basics.identity
-            [ Maybe.map
-                (\mapUnpack ->
-                    ( "data1"
-                    , case mapUnpack of
-                        Codegen.Types.Empty___Or_Data1__Empty__ content ->
-                            Json.Encode.null
+        [ ( "data1"
+          , case rec.data1 of
+                OpenApi.Common.Null ->
+                    Json.Encode.null
 
-                        Codegen.Types.Empty___Or_Data1__Data1 content ->
-                            encodeData1 content
-                    )
-                )
-                rec.data1
-            , Maybe.map
-                (\mapUnpack ->
-                    ( "value1"
-                    , case mapUnpack of
-                        OpenApi.Common.Null ->
-                            Json.Encode.null
+                OpenApi.Common.Present value ->
+                    encodeData1 value
+          )
+        , ( "value1"
+          , case rec.value1 of
+                OpenApi.Common.Null ->
+                    Json.Encode.null
 
-                        OpenApi.Common.Present value ->
-                            Json.Encode.string value
-                    )
-                )
-                rec.value1
-            ]
-        )
+                OpenApi.Common.Present value ->
+                    Json.Encode.string value
+          )
+        ]
 
 
 decodeData1 : Json.Decode.Decoder Codegen.Types.Data1

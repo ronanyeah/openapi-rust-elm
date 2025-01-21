@@ -42,7 +42,9 @@ async fn health_handler() -> StatusCode {
 
 #[derive(Default, serde::Serialize, ToSchema)]
 struct StatsData {
+    #[schema(required)]
     data1: Option<Data1>,
+    #[schema(required)]
     value1: Option<String>,
 }
 
